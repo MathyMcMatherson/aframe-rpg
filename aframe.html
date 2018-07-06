@@ -1,0 +1,245 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+        <script src="https://cdn.rawgit.com/archilogic-com/aframe-gblock/6498b71d/dist/gblock.js"></script>
+        <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v3.1.2/dist/aframe-physics-system.min.js"></script>
+        <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+    </head>
+    <body>
+         <a-scene id="scene">
+             
+            
+            <a-entity dynamic-body="shape: box" id="player" position="0 3 0" rotation="0 0 0">
+                <a-camera></a-camera>
+            </a-entity>
+            
+            <a-entity environment="preset: egypt; groundColor: #a87d6f;groundTexture: none"></a-entity>
+            <!--<a-entity gblock="https://poly.google.com/view/dVG0XJrpRJC"></a-entity>-->
+            
+            
+            <a-box static-body id="starterBox" color="tomato" depth="3.9" height=".1" width="3.9" position="0 1 0"></a-box>
+            
+            
+            <a-entity gblock="https://poly.google.com/view/7JzVJ36_nXh" position="4 3 -5" scale="1 1 1"></a-entity>
+          </a-scene>
+          
+
+    <script type="text/javascript">
+            //DIRECTION FUNCTIONS
+            let moveNorth = function() {
+                player.object3D.position.y += .2
+                player.object3D.position.z -= 4
+            }
+            
+            let moveSouth = function() {
+                player.object3D.position.y += .2
+                player.object3D.position.z += 4
+            }
+            
+            let moveEast = function() {
+                player.object3D.position.y += .2
+                player.object3D.position.x -= 4
+            }
+            
+            let moveWest = function() {
+                player.object3D.position.y += .2
+                player.object3D.position.x += 4
+            }
+    
+            //GLOBAL VARIABLES
+            let player = document.querySelector("#player")
+            let xPlayerPos = 0
+            let yPlayerPos = 0
+            let zPlayerPos = 0
+            let xProp = 0
+            let yaw = 0
+            let directionz = [moveNorth, moveEast, moveSouth, moveWest]
+            let currentDirection = 0
+            console.log(player.object3D.position)
+            
+            function checkDead() {
+                if(player.object3D.position.y <= -10) {
+                    
+                    console.log("DEAD");
+                    player.removeAttribute("dynamic-body")
+                    player.setAttribute("static-body", "")
+                    
+                    player.object3D.position.x = 0;
+                    player.object3D.position.y = 0;
+                    player.object3D.position.z = 0;
+                    
+                    player.object3D.rotation.x = 0;
+                    player.object3D.rotation.y = 0;
+                    player.object3D.rotation.z = 0;
+                    
+                    currentDirection = 0;
+                    
+                    player.removeAttribute("static-body")
+                    player.setAttribute("dynamic-body", "")
+                }
+            }
+            
+            let timer = setInterval(checkDead, 100);
+            
+            
+            window.addEventListener("message", receiveMessage, false);
+            let scene = document.querySelector("#scene");
+            function receiveMessage(event) {
+                if(event.data && typeof event.data == typeof "I'm a string!") {
+                    console.log("INSIDE AFRAME.HTML");
+                    //Do something in AFRAME
+                    let command = event.data.toUpperCase()
+                    console.log(command)
+                    
+                    //Command Tree
+                    if(command == "FORWARD"){
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        
+                        
+                        //player.object3D.position.y += .2
+                        //player.object3D.position.z -= 4
+                        directionz[currentDirection]();
+                        
+                        
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                        
+                    }
+                    if(command == "BACKWARDS" || command == "BACKWARD"){
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        directionz[(currentDirection + 2) % 4]();
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                       
+                    }
+                   
+                    
+                    if(command == "JUMP UP"){
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        player.object3D.position.y += 1
+                        directionz[currentDirection]();
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                    }
+                    
+                    if(command == "JUMP DOWN"){
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        player.object3D.position.y -= 1
+                        directionz[currentDirection]();
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                    }
+                    
+                    if(command == "TURN RIGHT"){
+                        
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        player.object3D.rotation.y += THREE.Math.degToRad(-90)
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                        
+                        currentDirection = currentDirection - 1
+                        if(currentDirection < 0) {
+                            currentDirection += 4
+                        }
+                        
+                    }
+                    
+                    if(command == "TURN LEFT"){
+                        
+                        player.removeAttribute("dynamic-body")
+                        player.setAttribute("static-body", "")
+                        player.object3D.rotation.y += THREE.Math.degToRad(90)
+                        player.removeAttribute("static-body")
+                        player.setAttribute("dynamic-body", "")
+                        
+                        
+                        currentDirection = (currentDirection + 1) % 4;
+                    }
+                 
+                    
+                    player.setAttribute("position", `${xPlayerPos} ${yPlayerPos} ${zPlayerPos}`)
+                    player.setAttribute("rotation", `0 ${yaw} 0`)
+                }    
+                    /* Pretty sure we don't need this!
+                    let newBox = document.createElement("a-box");
+                    newBox.setAttribute("position", `${xProp} 0 0`);
+                    xProp += 1;
+                    scene.appendChild(newBox);
+                    */
+                    console.log(player.object3D.position)
+            }
+            
+            // Zach's Code
+            var starterBox = document.querySelector("#starterBox");
+            var boxes = [];
+            var xBoxPos = 0;
+            var yBoxPos = 1;
+            var zBoxPos = 0
+            var YincreaseCounter = 0;
+            var directions = ["N", "E", "W", "N", "W", "N"];
+            var lastItem;
+            
+            function makePath(){
+                for (var i = 0; i < 40; i++) {
+                    var boxClone = starterBox.cloneNode();
+                    boxClone.id = "box" + i.toString()
+                    var randomNum = Math.floor(Math.random() * directions.length);
+                    var randomArrayItem;
+                    if (i < 3){
+                        randomArrayItem = directions[0];
+                    }
+                    else{
+                        randomArrayItem = directions[randomNum];
+                    }
+                    if (randomArrayItem === "N"){
+                        //console.log(randomArrayItem);
+                        zBoxPos -= 4;
+                        lastItem = randomArrayItem;
+                    }
+                    if ((randomArrayItem === "E") && (lastItem !== "W")){
+                        //console.log(randomArrayItem);
+                        xBoxPos += 4;
+                        lastItem = randomArrayItem;
+                    }
+                    if ((randomArrayItem === "W") && (lastItem !== "E")){
+                        //console.log(randomArrayItem);
+                        xBoxPos -= 4;
+                        lastItem = randomArrayItem;
+                    }
+                    YincreaseCounter++
+                    if (YincreaseCounter === 5){
+                        yBoxPos+= 1;
+                        YincreaseCounter = 0;
+                    }
+                    //yBoxPos+= .1;
+                    boxClone.setAttribute("position", `${xBoxPos} ${yBoxPos} ${zBoxPos}`);
+                    boxClone.setAttribute("class", "path");
+                    //boxes.push(boxClone);
+                    scene.appendChild(boxClone);
+                }
+                boxes = document.querySelectorAll(".path");
+                //console.log(boxes);
+            }
+            makePath();
+            
+            var boxPositions = [];
+            function trackBoxPositions(){
+                for (var i = 0; i < boxes.length; i++) {
+                    var position = boxes[i].object3D.position;
+                    var boxID = boxes[i].id;
+                    boxPositions.push(position);
+                }
+            }
+            trackBoxPositions();
+            console.log(boxPositions);
+            
+            
+        </script>
+
+    </body>
+</html>

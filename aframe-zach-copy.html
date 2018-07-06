@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+        <script src="https://cdn.rawgit.com/archilogic-com/aframe-gblock/6498b71d/dist/gblock.js"></script>
+        <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+    </head>
+    <body>
+         <a-scene id="scene">
+             
+             <a-assets>
+                <a-asset-item id="mars-obj" src="assets/Mars.obj"></a-asset-item>
+                <a-asset-item id="mars-mtl" src="assets/Mars.mtl"></a-asset-item>
+              </a-assets>
+            
+            <a-camera id="player" wasd-controls-enabled="true" position="0 1.5 0"></a-camera>
+            
+            <a-entity environment="preset: egypt; groundColor: #a87d6f; groundTexture: none"></a-entity>
+            <!--<a-entity gblock="https://poly.google.com/view/dVG0XJrpRJC"></a-entity>-->
+            
+            
+            <a-box id="starterBox" color="tomato" depth="4" height=".1" width="4" position="0 1 0"></a-box>
+            
+            <a-entity gblock="https://poly.google.com/view/48BXoqI_nwV" position="0 0 0" scale="1 1 1"></a-entity>
+            
+            <!--<a-box id="boxthing" color="blue" depth="3" height="3" width="3" position="0 1 0"></a-box>-->
+            
+            <a-entity obj-model="obj: #mars-obj" position=" 3 3 3"></a-entity>
+            
+            <!--<a-entity gblock="https://poly.google.com/view/48BXoqI_nwV&key=AIzaSyBkGvTdLzoWCjbx6xeGc60aLIiOyINcA4Y"></a-entity>-->
+            
+            
+
+          </a-scene>
+          
+          
+
+
+    <script type="text/javascript">
+    
+            //GLOBAL VARIABLES
+            let player = document.querySelector("#player")
+            let xPlayerPos = 0
+            let yPlayerPos = 5.5
+            let zPlayerPos = 0
+            let xProp = 0
+            
+            
+            window.addEventListener("message", receiveMessage, false);
+            let scene = document.querySelector("#scene");
+            function receiveMessage(event) {
+                if(event.data && typeof event.data == typeof "I'm a string!") {
+                    console.log("INSIDE AFRAME.HTML");
+                    //Do something in AFRAME
+                    let command = event.data.toUpperCase()
+                    console.log(command)
+                    
+                    //Command Tree
+                    if(command == "MOVE FORWARD"){
+                        zPlayerPos -= 1;
+                        
+                    }
+                    if(command == "MOVE BACKWARDS" || command == "MOVE BACKWARD"){
+                        zPlayerPos += 1;
+                        player.setAttribute("position", `${xPlayerPos} ${yPlayerPos} ${zPlayerPos}`)
+                    }
+                    if(command == "MOVE LEFT"){
+                        zPlayerPos -= 1;
+                        
+                    }
+                    if(command == "MOVE FORWARD"){
+                        zPlayerPos -= 1;
+                        
+                    }
+                    if(command == "MOVE FORWARD"){
+                        zPlayerPos -= 1;
+                        
+                    }
+                    if(command == "MOVE FORWARD"){
+                        zPlayerPos -= 1;
+
+                    }
+                    
+                    player.setAttribute("position", `${xPlayerPos} ${yPlayerPos} ${zPlayerPos}`)
+                    
+                    let newBox = document.createElement("a-box");
+                    newBox.setAttribute("position", `${xProp} 0 0`);
+                    xProp += 1;
+                    scene.appendChild(newBox);
+                }
+                
+            }
+            
+            
+            // Zach's Code
+            var starterBox = document.querySelector("#starterBox");
+            var boxes = [];
+            var xBoxPos = 0;
+            var yBoxPos = 1;
+            var zBoxPos = 0
+            var YincreaseCounter = 0;
+            var directions = ["N", "E", "W", "N", "W", "N"];
+            var lastItem;
+            
+            function makePath(){
+                for (var i = 0; i < 40; i++) {
+                    var boxClone = starterBox.cloneNode();
+                    boxClone.id = "box" + i.toString()
+                    var randomNum = Math.floor(Math.random() * directions.length);
+                    var randomArrayItem;
+                    if (i < 3){
+                        randomArrayItem = directions[0];
+                    }
+                    else{
+                        randomArrayItem = directions[randomNum];
+                    }
+                    if (randomArrayItem === "N"){
+                        //console.log(randomArrayItem);
+                        zBoxPos -= 4;
+                        lastItem = randomArrayItem;
+                    }
+                    if ((randomArrayItem === "E") && (lastItem !== "W")){
+                        //console.log(randomArrayItem);
+                        xBoxPos += 4;
+                        lastItem = randomArrayItem;
+                    }
+                    if ((randomArrayItem === "W") && (lastItem !== "E")){
+                        //console.log(randomArrayItem);
+                        xBoxPos -= 4;
+                        lastItem = randomArrayItem;
+                    }
+                    YincreaseCounter++
+                    if (YincreaseCounter === 5){
+                        yBoxPos+= 1;
+                        YincreaseCounter = 0;
+                    }
+                    //yBoxPos+= .1;
+                    boxClone.setAttribute("position", `${xBoxPos} ${yBoxPos} ${zBoxPos}`);
+                    boxes.push(boxClone);
+                    scene.appendChild(boxClone);
+                }
+            }
+            makePath();
+            
+            // boxes[2].setAttribute("position", "0 5 -8");
+            // scene.appendChild(boxes[2]);
+            // console.log(boxes[2]);
+
+            
+            
+            
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+        
+        
+        <link rel="stylesheet" href="text.css" />
+        
+    </head>
+    <body>
+        
+        <div id="container">
+            <div id="leftPanel" class="borderRight card-panel">
+                <p class="header">Walk The Path!</p>
+                <p>Enter commands to walk along the path</p>
+                <p>Refresh the page to generate a new path</p>
+            </div>
+            <div id="centerPanel" class="card-panel">
+                
+                
+                 <input placeholder="Type Here!" id="userInput" type="text" class="validate">
+                <a class="waves-effect waves-light btn" id="testButton">Perform Action!</a>
+            </div>
+            <div id="rightPanel" class="borderLeft card-panel">
+                <div id="moveDiv" class="borderDown">
+                    <p class="header">Move</p>
+                </div>
+                <div id="moveForwardDiv" class="borderDown">
+                    Forward
+                </div>
+                <div id="moveBackwardDiv" class="borderDown">
+                    Backward
+                </div>
+                <div id="rotateDiv" class="borderDown">
+                    <p class="header">Turn</p>
+                </div>
+                <div id="rotateRightDiv" class="borderDown">
+                    Right
+                </div>
+                <div id="rotateLeftDiv" class="borderDown">
+                    Left
+                </div>
+                <div id="jumpDiv">
+                    <p class="header">Jump</p>
+                </div>
+                <div id="jumpUpDiv" class="borderDown">
+                    Up
+                </div>
+                <div id="jumpDownDiv">
+                    Down
+                </div>
+            </div>
+        </div>
+        
+       
+    </body>
+    
+    <script type="text/javascript">
+        
+        let targetWindow = window.parent;
+        let lastCommand = "";
+    
+        let userInput = document.querySelector("#userInput")
+        userInput.addEventListener("keydown", e => {
+           if(e.key == "Enter") {
+               sendMessage();
+           }
+           else if(e.key == "ArrowUp" && userInput.value == "") {
+               userInput.value = lastCommand;
+           }
+        });
+        
+        
+        let button = document.querySelector("#testButton");
+        button.addEventListener("click", e => {
+           //console.log(window.parent);
+           sendMessage();
+           
+        });
+        
+        moveAnimations()
+        jumpAnimations()
+        rotateAnimations()
+        
+        function moveAnimations() {
+            let moveElts = ["#moveDiv", "#moveForwardDiv", "#moveBackwardDiv"];
+            let moveDivHandler = document.querySelector("#moveDiv");
+            moveDivHandler.addEventListener("mouseenter", e => {
+                for(let elt of moveElts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.add("moveAnimation");
+                }
+                
+            });
+            moveDivHandler.addEventListener("mouseleave", e => {
+                for(let elt of moveElts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.remove("moveAnimation");
+                }
+            });
+        }
+        
+        function jumpAnimations() {
+            let Elts = ["#jumpDiv", "#jumpUpDiv", "#jumpDownDiv"];
+            let DivHandler = document.querySelector(Elts[0]);
+            DivHandler.addEventListener("mouseenter", e => {
+                for(let elt of Elts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.add("jumpAnimation");
+                }
+                
+            });
+            DivHandler.addEventListener("mouseleave", e => {
+                for(let elt of Elts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.remove("jumpAnimation");
+                }
+            });
+        }
+        
+        function rotateAnimations() {
+            let Elts = ["#rotateDiv", "#rotateLeftDiv", "#rotateRightDiv"];
+            let DivHandler = document.querySelector(Elts[0]);
+            DivHandler.addEventListener("mouseenter", e => {
+                for(let elt of Elts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.add("rotateAnimation");
+                }
+                
+            });
+            DivHandler.addEventListener("mouseleave", e => {
+                for(let elt of Elts) {
+                    let eltDiv = document.querySelector(elt);
+                    eltDiv.classList.remove("rotateAnimation");
+                }
+            });
+        }
+        
+        function sendMessage() {
+           lastCommand = userInput.value;
+           targetWindow.postMessage(`${userInput.value}`, "*");
+           userInput.value = "" 
+        }
+        
+        
+        
+        
+    </script>
+    
+</html>

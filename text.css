@@ -1,0 +1,136 @@
+#container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+#leftPanel {
+    padding-left: 10px;
+    grid-column: 1;
+}
+
+#centerPanel {
+    
+    grid-column: 2;
+}
+
+.header {
+    font-size: x-large;
+    text-align: center;
+    margin: 5px;
+    font-weight: bold;
+}
+
+p {
+    text-align: center;
+}
+
+.sublist {
+    font-style: italic;
+}
+
+#rightPanel {
+    grid-column: 3;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+#moveDiv {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+}
+
+#rotateDiv {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+}
+
+#jumpDiv {
+    grid-column: 1;
+    grid-row: 5 / span 2;
+}
+
+#moveForwardDiv {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#moveBackwardDiv {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#rotateRightDiv {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#rotateLeftDiv {
+    grid-column: 2;
+    grid-row: 4;
+}
+
+#jumpUpDiv {
+    grid-column: 2;
+    grid-row: 5;
+}
+
+#jumpDownDiv {
+    grid-column: 2;
+    grid-row: 6;
+}
+
+.borderUp {
+    border-top: solid 1px black;
+}
+
+.borderDown {
+    border-bottom: solid 1px black;
+}
+
+.borderLeft {
+    border-left: solid 1px black;
+}
+
+.borderRight {
+    border-right: solid 1px black;
+}
+
+@keyframes move {
+    from {background-color: white;}
+    to {background-color: #90caf9;}
+}
+
+@keyframes jump {
+    from {background-color: white;}
+    to {background-color: #b2dfdb;}
+}
+
+@keyframes rotate {
+    from {background-color: white;}
+    to {background-color: #ffccbc;}
+}
+
+.moveAnimation {
+    animation-name: move;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.jumpAnimation {
+    animation-name: jump;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.rotateAnimation {
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+
